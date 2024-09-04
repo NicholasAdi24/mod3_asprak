@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'profile.dart'; // Import the profile page
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +18,49 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const MainPage(),
+    );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  int _currentIndex = 0;
+  final List<Widget> _pages = [
+    const HomePage(),
+    const ProfilePage(),
+  ];
+
+  void _onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onTabTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }
@@ -49,7 +92,6 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         mangaList.addAll(List<Map<String, dynamic>>.from(mangaData));
-        ;
       });
     } else {
       print('Failed to load manga: ${response.statusCode}');
